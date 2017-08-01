@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wall Assignment</title>
+</head>
+<body>
+	<p>Welcome, {{session['name']}}</p>
+	<a href="/logout">Log out</a>
+	<hr>
+	<h1>CodingDojo Wall</h1>
+	<h2>Post a message</h2>
+	<form action='/send' method='POST'>
+		<textarea name="message"></textarea>
+		<br>
+		<input type="submit" value="Post a message">
+	</form>
+	<hr>
+	<h1>Messages</h1>
+	{% for element in all_messages: %}
+		<h4>{{element['first_name']}} {{element['last_name']}} - {{ element['created_at'].strftime( '%m/%d/%Y %I:%M %p') }}</h4>
+		<p>{{ element['message'] }}</p>
+		{% for com_element in all_comments: %}
+			{% if com_element['message_id'] == element['messageid']: %}
+				<h4>Comment by: {{com_element['first_name']}} {{com_element['last_name']}} - {{ com_element['created_at'].strftime( '%m/%d/%Y %I:%M %p') }}</h4>
+				<p>{{ com_element['comment'] }}</p>
+			{% endif %}
+		{% endfor %}
+		<label>Post a comment</label>
+		<form action='/comment' method='POST'>
+			<textarea name="comment"></textarea>
+			<br>
+			<input type="submit" value="Post a comment">
+			<input type="hidden" name="messageid" value="{{ element['messageid'] }}">
+		</form>
+	{% endfor %}
+</body>
+</html>
